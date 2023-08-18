@@ -1,4 +1,5 @@
-venv_usp_1_0
+env_uspv2
 *.db
 *.json
 log/*
+ressources/*.ini
