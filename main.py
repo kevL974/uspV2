@@ -2,11 +2,15 @@ import asyncio
 import argparse
 from binance import AsyncClient, BinanceSocketManager
 from bot_binance.utils import *
+from bot_binance.wallet import BinanceWallet
 
 
 async def main(conf_api_key: str, conf_api_secret: str, testnet: bool):
     client = await AsyncClient.create(api_key=conf_api_key, api_secret=conf_api_secret, testnet=testnet)
     info = await client.get_account()
+
+    wallet = BinanceWallet(client)
+    print('BTC qty = {}'.format(str(await wallet.get_asset_qty('BTC'))))
     print(info)
     bm = BinanceSocketManager(client)
     # start any sockets here, i.e a trade socket
