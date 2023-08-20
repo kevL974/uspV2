@@ -3,6 +3,7 @@ import argparse
 from binance import AsyncClient, BinanceSocketManager
 from bot_binance.utils import *
 from bot_binance.wallet import BinanceWallet
+from bot_binance.analyser import Analyser, BinanceAnalyser
 
 
 async def main(conf_api_key: str, conf_api_secret: str, testnet: bool):
@@ -12,14 +13,18 @@ async def main(conf_api_key: str, conf_api_secret: str, testnet: bool):
     wallet = BinanceWallet(client)
     print('BTC qty = {}'.format(str(await wallet.get_asset_qty('BTC'))))
     print(info)
-    bm = BinanceSocketManager(client)
-    # start any sockets here, i.e a trade socket
-    ts = bm.kline_socket('BNBBTC',)
-    # then start receiving messages
-    async with ts as tscm:
-        while True:
-            res = await tscm.recv()
-            print(res)
+
+    indicators = BinanceAnalyser(client)
+
+    await indicators.get_indicators("BTCUSDT")
+    # bm = BinanceSocketManager(client)
+    # # start any sockets here, i.e a trade socket
+    # ts = bm.kline_socket('BNBBTC',)
+    # # then start receiving messages
+    # async with ts as tscm:
+    #     while True:
+    #         res = await tscm.recv()
+    #         print(res)
 
     await client.close_connection()
 
