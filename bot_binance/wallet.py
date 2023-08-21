@@ -1,8 +1,5 @@
-import asyncio
-import json
 from abc import ABC, abstractmethod
 from binance import AsyncClient
-from typing import Dict, Optional, List, Tuple, Union
 
 ACC_BALANCES: str = "balances"
 ACC_ASSET: str = "asset"
@@ -25,12 +22,13 @@ class Wallet(ABC):
         pass
 
 
-class BinanceWallet:
+class BinanceWallet(Wallet):
     """
     This class stores binance account information.
     """
 
     def __init__(self, binance_client: AsyncClient):
+        Wallet.__init__(self)
         assert binance_client is not None
         self.client = binance_client
 

@@ -1,30 +1,24 @@
 import asyncio
 import argparse
-from binance import AsyncClient, BinanceSocketManager
+from binance import AsyncClient
 from bot_binance.utils import *
 from bot_binance.wallet import BinanceWallet
-from bot_binance.analyser import Analyser, BinanceAnalyser
+from bot_binance.analyzer import BinanceAnalyzer
+from bot_binance.broker import Broker
+from bot_binance.strategy import Sma200Rsi10Strategy
+from bot_binance.observer import EventType
 
 
 async def main(conf_api_key: str, conf_api_secret: str, testnet: bool):
     client = await AsyncClient.create(api_key=conf_api_key, api_secret=conf_api_secret, testnet=testnet)
-    info = await client.get_account()
 
     wallet = BinanceWallet(client)
-    print('BTC qty = {}'.format(str(await wallet.get_asset_qty('BTC'))))
-    print(info)
+    strategy = Sma200Rsi10Strategy()
+    binance_analyzer = BinanceAnalyzer(client)
+    broker = Broker(wallet, strategy)
 
-    indicators = BinanceAnalyser(client)
-
-    await indicators.get_indicators("BTCUSDT")
-    # bm = BinanceSocketManager(client)
-    # # start any sockets here, i.e a trade socket
-    # ts = bm.kline_socket('BNBBTC',)
-    # # then start receiving messages
-    # async with ts as tscm:
-    #     while True:
-    #         res = await tscm.recv()
-    #         print(res)
+    binance_analyzer.add_observer(EventType.SIGNAL, broker)
+    await binance_analyzer.analyze('BTCUSDT')
 
     await client.close_connection()
 
