@@ -1,8 +1,7 @@
-# Dictionnaries english to french
-# Quote asset volume-> Devis volumes d'actifs
-# Taker buy base asset volume -> Volume d'actifs de base d'achat preneur
+from enum import Enum
 
-class HistKlinesIndex:
+
+class HistKlinesIndex(Enum):
     """
     Contains OHLCV index from return of binance client method 'get_historical_klines(**params)'
     """
@@ -20,3 +19,6 @@ class HistKlinesIndex:
     IGNORE: int = 11
 
 
+# Dictionnaries english to french
+# Quote asset volume-> Devis volumes d'actifs
+# Taker buy base asset volume -> Volume d'actifs de base d'achat preneur
