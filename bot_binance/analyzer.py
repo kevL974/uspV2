@@ -59,17 +59,15 @@ class BinanceAnalyzer(Analyzer, ObservableInterface):
 
     def add_observer(self, event_type: EventType, observer: ObserverInterface) -> None:
         if event_type not in self._observers:
-            self._observers[event_type] = [observer]
-        else:
-            event_type_observers = self._observers[event_type]
-            event_type_observers.append(observer)
+            self._observers[event_type] = []
+
+        event_type_observers = self._observers[event_type]
+        event_type_observers.append(observer)
 
     def remove_observer(self, observer: ObserverInterface) -> None:
         for event_type, observers in self._observers:
-            try:
+            if observer in observers:
                 observers.remove(observer)
-            except ValueError:
-                pass
 
     def notify(self, event_type: EventType, data) -> None:
         if event_type in self._observers:
