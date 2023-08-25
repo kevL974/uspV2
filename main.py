@@ -20,6 +20,7 @@ def create_analyzer(strategy: TradingStrategy) -> Analyzer:
         analyzer = AnalyzerFactory.get_analyser(AnalyzerFactory.TYPE_BINANCE, **analyzer_settings)
     except ValueError as error:
         print(error)
+        exit()
 
     return analyzer
 
@@ -38,6 +39,8 @@ async def create_required_strategy_indicators(strategy: TradingStrategy, analyze
             indicators.append(indicator)
         except ValueError as error:
             print(error)
+            exit()
+
     return indicators
 
 
