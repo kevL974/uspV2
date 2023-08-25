@@ -66,7 +66,6 @@ class Analyzer(ObservableInterface):
 
 
 class BinanceAnalyzer(Analyzer):
-
     PERIOD_SUFFIX_UTC = "ago UTC"
     LIST_KLINE_INTERVAL = [AsyncClient.KLINE_INTERVAL_1MINUTE,
                            AsyncClient.KLINE_INTERVAL_3MINUTE,
@@ -96,7 +95,7 @@ class BinanceAnalyzer(Analyzer):
     def _initialize_websocket(self) -> None:
         self.__socket_manager = BinanceSocketManager(self.__client)
 
-    async def _start_websocket(self,) -> None:
+    async def _start_websocket(self, ) -> None:
         ts = self.__socket_manager.kline_socket(self._symbol, self._interval)
         async with ts as tscm:
             while True:
@@ -122,14 +121,14 @@ class BinanceAnalyzer(Analyzer):
                 observer_i.update(data)
 
     async def get_historical_data(self, period: int) -> List:
-        qty = int(self._interval[:-1])*period
+        qty = int(self._interval[:-1]) * period
         time_unit = convert_timeunit_abrv_to_full(self._interval[-1])
         return await self.__client.get_historical_klines(self._symbol,
-                                                        self._interval,
-                                                        "{qty}{time_unit} {suffix}".format(qty=str(qty),
-                                                                                           time_unit=time_unit,
-                                                                                           suffix=BinanceAnalyzer.
-                                                                                           PERIOD_SUFFIX_UTC))
+                                                         self._interval,
+                                                         "{qty}{time_unit} {suffix}".format(qty=str(qty),
+                                                                                            time_unit=time_unit,
+                                                                                            suffix=BinanceAnalyzer.
+                                                                                            PERIOD_SUFFIX_UTC))
 
 
 class AnalyzerFactory:
