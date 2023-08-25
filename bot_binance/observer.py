@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from enum import Enum
+from typing import Dict
 
 
-class EventType(Enum):
+class EventType:
 
     SIGNAL: str = "SIGNAL"
     DATA: str = "DATA"
@@ -14,7 +14,7 @@ class ObserverInterface(ABC):
     """
 
     @abstractmethod
-    def update(self, data) -> None:
+    def update(self, data: Dict) -> None:
         """
         Update observer object from new data.
         @param data: the notified data
@@ -28,7 +28,7 @@ class ObservableInterface(ABC):
     This interface provides Observable's methods to implements Observer design pattern.
     """
     @abstractmethod
-    def add_observer(self, event_type: EventType, observer: ObserverInterface) -> None:
+    def add_observer(self, event_type: str, observer: ObserverInterface) -> None:
         """
         Add observer object to a collection for the given event type.
         @param event_type: the type of event that will be notified
@@ -47,7 +47,7 @@ class ObservableInterface(ABC):
         pass
 
     @abstractmethod
-    def notify(self, event_type: EventType, data) -> None:
+    def notify(self, event_type: str, data) -> None:
         """
         Notify an event for all observer objects concerned.
         @param event_type: the type of event that will be notified
