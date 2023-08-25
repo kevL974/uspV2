@@ -2,7 +2,7 @@ from abc import abstractmethod
 from binance import AsyncClient, BinanceSocketManager
 from typing import Dict, List
 from bot_binance.observer import EventType, ObserverInterface, ObservableInterface
-from bot_binance.indicator_setting_name import *
+from bot_binance.setting_name import *
 from bot_binance.utils import convert_timeunit_abrv_to_full
 
 
