@@ -1,7 +1,5 @@
-from enum import Enum
 
-
-class HistKlinesIndex(Enum):
+class HistKlinesIndex:
     """
     Contains OHLCV index from return of binance client method 'get_historical_klines(**params)'
     """
@@ -17,7 +15,6 @@ class HistKlinesIndex(Enum):
     TB_BASE_ASSET_VOLUME: int = 9
     TB_QUOTE_ASSET_VOLUME: int = 10
     IGNORE: int = 11
-
 
 # Dictionnaries english to french
 # Quote asset volume-> Devis volumes d'actifs
