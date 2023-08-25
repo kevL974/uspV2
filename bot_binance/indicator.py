@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple
 from collections import deque
 from bot_binance.observer import ObserverInterface, ObservableInterface, EventType
-from bot_binance.indicator_setting_name import *
+from bot_binance.setting_name import *
 
 
 class Indicator(ObserverInterface, ObservableInterface):
