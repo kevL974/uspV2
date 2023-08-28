@@ -64,7 +64,7 @@ class Sma200Rsi10Strategy(TradingStrategy):
         pass
 
     def update(self, data: Dict) -> None:
-        self.set_indicator_value(data[NAME], data[VALUE]); print(data)
+        self.set_indicator_value(data[NAME], data[VALUE])
 
     def add_observer(self, event_type: str, observer: ObserverInterface) -> None:
         if EventType.SIGNAL == event_type:

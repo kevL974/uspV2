@@ -160,3 +160,36 @@ def sma(values: List, window_size: int) -> float:
         index_values += 1
 
     return moving_average[-1]
+
+
+def rsi(prices: List[float], period: int = 14) -> List[float]:
+    """
+    Calculate the Relative Strength Index (RSI) for a given list of prices.
+    @param prices: List of prices over time
+    @param period: The period for RSI calculation. Default is 14.
+    @return: List of RSI values calculated for each data point.
+    """
+
+    differences = [prices[i] - prices[i - 1] for i in range(1, len(prices))]
+
+    gains = list(map(lambda x: x if x > 0 else 0, differences))
+    losses = list(map(lambda x: abs(x) if x < 0 else 0, differences))
+
+    rsi_values = []
+    i = 0
+    while i < len(prices):
+        if i < period:
+            rsi_values.append(None)
+
+        else:
+            start = i - period
+            end = i
+            avg_gain = sum(gains[start:end]) / period
+            avg_loss = sum(losses[start:end]) / period
+            rs = avg_gain / avg_loss if avg_loss != 0 else 0
+
+            rsi_values.append(round(100 - (100 / (1 + rs)), 2))
+        i += 1
+
+    return rsi_values
+
