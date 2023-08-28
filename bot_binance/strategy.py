@@ -54,7 +54,13 @@ class Sma200Rsi10Strategy(TradingStrategy):
                  NAME: "sma200",
                  WINDOW: 200
              }
-             )
+             ),
+            (IndicatorFactory.TYPE_RSI,
+             {
+                 NAME: "rsi10",
+                 WINDOW: 10
+             }
+             ),
         ]
 
     def get_analyzer_settings(self) -> Dict:

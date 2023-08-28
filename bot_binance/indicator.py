@@ -81,7 +81,7 @@ class SmaIndicator(Indicator):
             self.__hist_klines_ct.append(ct)
 
     def update(self, data: Dict) -> None:
-        close_price = data['k']['c'];print(data)
+        close_price = data['k']['c']
         close_time = data['k']['T']
         self.__hist_klines_cp.popleft()
         self.__hist_klines_cp.append(float(close_price))
@@ -94,7 +94,7 @@ class SmaIndicator(Indicator):
         return {WINDOW: self.__window_size}
 
     def value(self) -> Tuple:
-        return self.__hist_klines_ct[-1], sma(self.__hist_klines_cp, self.__window_size)
+        return self.__hist_klines_ct[-1], sma(list(self.__hist_klines_cp), self.__window_size)[-1]
 
 
 class RsiIndicator(Indicator):
@@ -102,15 +102,31 @@ class RsiIndicator(Indicator):
     def __init__(self, name: str = "rsi", window: int = 10):
         super().__init__(name)
         self.__window_size: int = window
+        self.__hist_klines_cp = deque(maxlen=self.__window_size)
+        self.__hist_klines_ct = deque(maxlen=self.__window_size)
 
-    def value(self) -> float:
-        pass
+    def initialisation(self, hist_klines_cp: List, hist_klines_ct: List) -> None:
+        for cp in hist_klines_cp:
+            self.__hist_klines_cp.append(cp)
 
-    def get_parameter(self) -> str:
-        pass
+        for ct in hist_klines_ct:
+            self.__hist_klines_ct.append(ct)
 
     def update(self, data: Dict) -> None:
-        pass
+        close_price = data['k']['c']
+        close_time = data['k']['T']
+        self.__hist_klines_cp.popleft()
+        self.__hist_klines_cp.append(float(close_price))
+        self.__hist_klines_ct.popleft()
+        self.__hist_klines_ct.append(int(close_time))
+        data = {NAME: self._name, VALUE: self.value()}
+        self.notify(EventType.DATA, data)
+
+    def value(self) -> float:
+        return self.__hist_klines_ct[-1], rsi(list(self.__hist_klines_cp), self.__window_size)[-1]
+
+    def get_parameters(self) -> Dict:
+        return {WINDOW: self.__window_size}
 
 
 class IndicatorFactory:
@@ -139,27 +155,28 @@ class IndicatorFactory:
         return indicator
 
 
-def sma(values: List, window_size: int) -> float:
+def sma(prices: List[float], period: int) -> float:
     """
     Calculate simple moving average values from a list of value according to window size given in parameter
-    @param values: a list of element
-    @param window_size: a number that defines the size of window
+    @param prices: a list of element
+    @param period: a number that defines the size of window
     @return: List of simple moving average
     """
-    nb_values = len(values)
-    moving_average = [None] * nb_values
-    index_values = 0
-    iem_values = 1
-    while iem_values <= nb_values:
+    i = 0
+    sma_values = []
+    while i <= len(prices):
+        if i < period:
+            sma_values.append(None)
 
-        if iem_values - window_size >= 0:
-            average_i = sum(values) / window_size
-            moving_average[index_values] = average_i
+        else:
+            start = i - period
+            end = i
+            value = sum(prices[start:end]) / period
+            sma_values.append(value)
 
-        iem_values += 1
-        index_values += 1
+        i += 1
 
-    return moving_average[-1]
+    return sma_values
 
 
 def rsi(prices: List[float], period: int = 14) -> List[float]:
@@ -177,7 +194,7 @@ def rsi(prices: List[float], period: int = 14) -> List[float]:
 
     rsi_values = []
     i = 0
-    while i < len(prices):
+    while i <= len(prices):
         if i < period:
             rsi_values.append(None)
 
